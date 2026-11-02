@@ -14,47 +14,70 @@ body {
   overflow: hidden;
 }
 
+/* 1. Планета Земля */
 .earth {
   width: 300px;
   padding: 100px;
   position: relative;
-  z-index: 1;
+  z-index: 1; /* слой для перекрытия спутника */
+  /* вращение вокруг оси */
+  animation: earth-spin 15s linear infinite;
 }
 
+/* 2. Спутник Луна */
 .moon {
   position: absolute;
   top: 170px;
   left: 170px;
   width: 72px;
-  z-index: 0;
+  z-index: 0; /* Стартует позади Земли */
+  /* 
+     Кузнецов = 8 букв -> (8 * 0.5) + 2 = 6s
+     Нечетный номер -> ease-in-out + reverse */
   animation: orbita 6s ease-in-out reverse infinite;
 }
 
+/* Орбита Луны */
 @keyframes orbita {
   0% {
     width: 72px;
   }
   24% {
-    z-index: 0;
+    z-index: 0; /* До выхода держится за Землей */
   }
   25% {
     left: 380px;
     top: 130px;
-    z-index: 2;
+    z-index: 2; /* Выходит на передний план */
   }
   50% {
-    width: 128px;
+    width: 128px; /* Пик приближения к экрану */
   }
   74% {
-    z-index: 2;
+    z-index: 2; /* Остается спереди планеты */
   }
   75% {
     top: 300px;
     left: 40px;
-    z-index: 0;
+    z-index: 0; /* Уходит за Землю */
   }
   100% {
     width: 72px;
+    transform: rotate(360deg); /* Оборот вокруг своей оси */
+  }
+}
+
+/* Вращение Земли вокруг своей оси */
+@keyframes earth-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
     transform: rotate(360deg);
   }
 }
+
+/* Своими словами
+1. Луна уходит за Землю и выходит вперед благодаря комбинации позиционирования (relative у Земли, absolute у Луны) и свойства z-index[cite: 3, 6]. У Земли всегда z-index: 1[cite: 3, 6]. В ключевых кадрах мы меняем z-index Луны: на дальнем отрезке ставим 0 (она прячется под Землю), а на ближнем ставим 2 (она перекрывает Землю)[cite: 3, 6]. Увеличение ширины до 128px на 50% анимации усиливает эффект объема и приближения[cite: 3, 6].
+2. Значение infinite делает анимацию бесконечной — цикл запускается заново по кругу и никогда не останавливается[cite: 3, 6].
+*/
